@@ -1,0 +1,47 @@
+---
+import ContactLinks from '../components/ContactLinks.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../site.config';
+---
+
+<BaseLayout title="About" type="profile">
+  <article class="prose">
+    <header class="page-head">
+      <h1>About</h1>
+    </header>
+
+    <p>
+      I am a {site.role} in physics in the {site.affiliation.department} at the{' '}
+      <a href={site.affiliation.url}>{site.affiliation.name}</a> in Leipzig, where I started my PhD
+      in 2024.
+    </p>
+
+    <h2>Research</h2>
+    <p>
+      I study how pretrained generative and probabilistic models can be reused reliably when the
+      prior or the observation process changes. Simulation-based inference and inverse problems are
+      my controlled testbeds for questions about adaptation, posterior reliability, and uncertainty.
+    </p>
+    <p>
+      My PhD project is on deep image reconstruction for fast, ultra-high-resolution MRI. It has
+      given me hands-on experience with real forward models, acquisition constraints, and large
+      experiments on HPC systems.
+    </p>
+
+    <h2>A question I keep returning to</h2>
+    <p>
+      <em>How does evidence become a new abstraction?</em> I am curious how an intelligent system
+      notices that its current way of representing a problem is inadequate, seeks evidence that
+      discriminates between explanations, and moves to a better model. This is a guiding interest
+      rather than a finished line of work.
+    </p>
+
+    {/* TODO: once the flagship paper is public, add education, publications and talks from the CV. */}
+
+    <h2>Contact</h2>
+    <p>
+      The best way to reach me is by email at <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+    <ContactLinks />
+  </article>
+</BaseLayout>

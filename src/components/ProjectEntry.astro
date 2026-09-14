@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { hasBody } from '../lib/content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  headingLevel?: 'h1' | 'h2' | 'h3';
+  /** Link the title to the project page when it has a write-up. */
+  linkTitle?: boolean;
+}
+
+const { project, headingLevel = 'h3', linkTitle = true } = Astro.props;
+const { title, summary, question, built, result, kind, links, date, draft } = project.data;
+const Heading = headingLevel;
+const href = linkTitle && hasBody(project) ? withBase(`/work/${project.id}/`) : undefined;
+---
+
+<article class="project">
+  <Heading class="title">{href ? <a href={href}>{title}</a> : title}</Heading>
+  <p class="meta">
+    <time datetime={date.toISOString().slice(0, 10)}>{date.getUTCFullYear()}</time>
+    {kind.length > 0 && <span> · {kind.join(' · ')}</span>}
+    {draft && <span class="draft">draft</span>}
+  </p>
+  <p class="summary">{summary}</p>
+  <dl>
+    <div>
+      <dt class="label">Question</dt>
+      <dd>{question}</dd>
+    </div>
+    <div>
+      <dt class="label">Built</dt>
+      <dd>{built}</dd>
+    </div>
+    {result && (
+      <div>
+        <dt class="label">Result</dt>
+        <dd>{result}</dd>
+      </div>
+    )}
+  </dl>
+  {links.length > 0 && (
+    <ul class="inline-list links">
+      {links.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))}
+    </ul>
+  )}
+</article>
+
+<style>
+  .project {
+    padding-block: 1.5rem;
+  }
+
+  .project + :global(.project) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .title a {
+    color: var(--fg);
+  }
+
+  .meta {
+    margin: 0.2rem 0 0.75rem;
+  }
+
+  .draft {
+    margin-left: 0.5rem;
+  }
+
+  dl {
+    margin: 0 0 0.75rem;
+  }
+
+  dl > div {
+    display: grid;
+    gap: 0 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  dt {
+    padding-top: 0.2rem;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  @media (min-width: 40rem) {
+    dl > div {
+      grid-template-columns: 6rem 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import ProjectEntry from '../../components/ProjectEntry.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+---
+
+<BaseLayout
+  title="Work"
+  description="Research projects, experiments, benchmarks, and tools by Xin Zhao."
+  noindex={projects.length === 0}
+>
+  <header class="page-head">
+    <h1>Work</h1>
+    <p class="muted">
+      Projects, experiments, and tools. Each entry states the question, what I built or tested, and
+      what came out of it.
+    </p>
+  </header>
+  {projects.length > 0 ? (
+    projects.map((project) => <ProjectEntry project={project} headingLevel="h2" />)
+  ) : (
+    <p>Nothing listed yet.</p>
+  )}
+</BaseLayout>

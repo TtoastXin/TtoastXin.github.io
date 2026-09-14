@@ -1,0 +1,19 @@
+---
+import NoteList from '../../components/NoteList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getNotes } from '../../lib/content';
+
+const notes = await getNotes();
+---
+
+<BaseLayout
+  title="Notes"
+  description="Technical notes and short write-ups by Xin Zhao."
+  noindex={notes.length === 0}
+>
+  <header class="page-head">
+    <h1>Notes</h1>
+    <p class="muted">Technical notes, small experiments, and write-ups.</p>
+  </header>
+  {notes.length > 0 ? <NoteList notes={notes} /> : <p>Nothing listed yet.</p>}
+</BaseLayout>

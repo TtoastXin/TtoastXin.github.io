@@ -1,0 +1,82 @@
+---
+import { getNotes, getProjects, getPublications } from '../lib/content';
+import { withBase } from '../lib/url';
+import { site } from '../site.config';
+
+const [projects, publications, notes] = await Promise.all([
+  getProjects(),
+  getPublications(),
+  getNotes(),
+]);
+
+// Sections without content stay out of the navigation.
+const items = [
+  { href: '/work/', label: 'Work', show: projects.length > 0 },
+  { href: '/publications/', label: 'Publications', show: publications.length > 0 },
+  { href: '/notes/', label: 'Notes', show: notes.length > 0 },
+  { href: '/about/', label: 'About', show: true },
+].filter((item) => item.show);
+
+const isCurrent = (href: string) => Astro.url.pathname.startsWith(withBase(href));
+---
+
+<header class="site-header">
+  <div class="wrap inner">
+    <a class="name" href={withBase('/')}>
+      {site.name}
+    </a>
+    <nav aria-label="Main">
+      <ul class="inline-list">
+        {items.map((item) => (
+          <li>
+            <a href={withBase(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+        {site.cv && (
+          <li>
+            <a href={withBase(site.cv)}>CV</a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    padding-block: 1.1rem;
+  }
+
+  .name {
+    font-weight: 600;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--fg);
+  }
+
+  nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+</style>

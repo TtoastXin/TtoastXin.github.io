@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatMonth, withBase } from '../lib/url';
+
+interface Props {
+  notes: CollectionEntry<'notes'>[];
+}
+
+const { notes } = Astro.props;
+---
+
+<ul class="notes">
+  {notes.map((note) => (
+    <li>
+      <a href={withBase(`/notes/${note.id}/`)}>{note.data.title}</a>
+      {note.data.draft && <span class="draft">draft</span>}
+      <p class="muted">{note.data.description}</p>
+      <p class="meta">
+        <time datetime={note.data.date.toISOString().slice(0, 10)}>
+          {formatMonth(note.data.date)}
+        </time>
+      </p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding-block: 1.1rem;
+  }
+
+  li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  a {
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0.15rem 0 0;
+  }
+
+  .draft {
+    margin-left: 0.5rem;
+  }
+</style>

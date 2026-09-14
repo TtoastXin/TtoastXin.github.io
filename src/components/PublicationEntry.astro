@@ -1,0 +1,73 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { site } from '../site.config';
+
+interface Props {
+  publication: CollectionEntry<'publications'>;
+}
+
+const { title, authors, venue, year, status, note, links, draft } = Astro.props.publication.data;
+const details = [venue, String(year), status !== 'published' ? status : undefined, note]
+  .filter((part) => part !== undefined)
+  .join(' · ');
+---
+
+<li class="publication">
+  <p class="title">{title}</p>
+  <p class="authors">
+    {authors.map((author, i) => (
+      <>
+        {i > 0 && ', '}
+        {site.authorAliases.includes(author) ? <strong>{author}</strong> : author}
+      </>
+    ))}
+  </p>
+  <p class="meta">
+    {details}
+    {draft && <span class="draft">draft</span>}
+  </p>
+  {links.length > 0 && (
+    <ul class="inline-list">
+      {links.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))}
+    </ul>
+  )}
+</li>
+
+<style>
+  .publication {
+    padding-block: 1.1rem;
+  }
+
+  .publication + :global(.publication) {
+    border-top: 1px solid var(--rule);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .title {
+    font-weight: 600;
+  }
+
+  .authors {
+    color: var(--muted);
+  }
+
+  .authors strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .draft {
+    margin-left: 0.5rem;
+  }
+
+  ul {
+    margin-top: 0.35rem;
+  }
+</style>

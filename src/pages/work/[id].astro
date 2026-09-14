@@ -1,0 +1,34 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import ProjectEntry from '../../components/ProjectEntry.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects, hasBody } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects
+    .filter(hasBody)
+    .map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={project.data.title} description={project.data.summary} type="article">
+  <ProjectEntry project={project} headingLevel="h1" linkTitle={false} />
+  <article class="prose">
+    <Content />
+  </article>
+</BaseLayout>
+
+<style>
+  :global(h1.title) {
+    font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.5rem);
+  }
+</style>

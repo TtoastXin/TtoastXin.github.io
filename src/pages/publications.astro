@@ -1,0 +1,34 @@
+---
+import PublicationEntry from '../components/PublicationEntry.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublications } from '../lib/content';
+
+const publications = await getPublications();
+---
+
+<BaseLayout
+  title="Publications"
+  description="Papers and preprints by Xin Zhao."
+  noindex={publications.length === 0}
+>
+  <header class="page-head">
+    <h1>Publications</h1>
+  </header>
+  {publications.length > 0 ? (
+    <ol class="plain">
+      {publications.map((publication) => (
+        <PublicationEntry publication={publication} />
+      ))}
+    </ol>
+  ) : (
+    <p>Nothing listed yet.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .plain {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import { withBase } from '../lib/url';
+import { site } from '../site.config';
+
+const links: { label: string; href: string; me?: boolean }[] = [
+  { label: 'Email', href: `mailto:${site.email}` },
+];
+if (site.github) links.push({ label: 'GitHub', href: site.github, me: true });
+if (site.scholar) links.push({ label: 'Google Scholar', href: site.scholar, me: true });
+if (site.cv) links.push({ label: 'CV', href: withBase(site.cv) });
+---
+
+<ul class="inline-list contact">
+  {links.map((link) => (
+    <li>
+      <a href={link.href} rel={link.me ? 'me' : undefined}>
+        {link.label}
+      </a>
+    </li>
+  ))}
+</ul>

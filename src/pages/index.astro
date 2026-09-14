@@ -1,0 +1,124 @@
+---
+import ContactLinks from '../components/ContactLinks.astro';
+import NoteList from '../components/NoteList.astro';
+import ProjectEntry from '../components/ProjectEntry.astro';
+import PublicationEntry from '../components/PublicationEntry.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getNotes, getProjects, getPublications } from '../lib/content';
+import { withBase } from '../lib/url';
+import { site } from '../site.config';
+
+const [projects, publications, notes] = await Promise.all([
+  getProjects(),
+  getPublications(),
+  getNotes(),
+]);
+
+// Featured projects lead; without any, show the most recent ones.
+const featured = projects.filter((p) => p.data.featured);
+const work = (featured.length > 0 ? featured : projects).slice(0, 4);
+const selectedPublications = publications.filter((p) => p.data.selected);
+const shownPublications = (
+  selectedPublications.length > 0 ? selectedPublications : publications
+).slice(0, 5);
+const recentNotes = notes.slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role,
+  email: `mailto:${site.email}`,
+  affiliation: {
+    '@type': 'ResearchOrganization',
+    name: site.affiliation.name,
+    url: site.affiliation.url,
+  },
+  knowsAbout: [
+    'Probabilistic inference',
+    'Simulation-based inference',
+    'Generative models',
+    'Inverse problems',
+    'Uncertainty quantification',
+  ],
+  sameAs: [site.github, site.scholar].filter((url) => url !== undefined),
+  ...(Astro.site && { url: new URL(withBase('/'), Astro.site).href }),
+};
+---
+
+<BaseLayout type="profile" jsonLd={jsonLd}>
+  <section class="intro" aria-labelledby="intro-name">
+    <h1 id="intro-name">{site.name}</h1>
+    <p class="affiliation">
+      {`${site.role}, ${site.affiliation.department}, `}
+      <a href={site.affiliation.url}>{site.affiliation.name}</a>
+    </p>
+    <p class="lede">{site.headline}</p>
+    <p>{site.interest}</p>
+    <ContactLinks />
+  </section>
+
+  {work.length > 0 && (
+    <section class="section" aria-labelledby="work-heading">
+      <div class="section-head">
+        <h2 id="work-heading">Selected work</h2>
+        {projects.length > work.length && <a href={withBase('/work/')}>All work</a>}
+      </div>
+      {work.map((project) => (
+        <ProjectEntry project={project} />
+      ))}
+    </section>
+  )}
+
+  {shownPublications.length > 0 && (
+    <section class="section" aria-labelledby="publications-heading">
+      <div class="section-head">
+        <h2 id="publications-heading">Publications</h2>
+        {publications.length > shownPublications.length && (
+          <a href={withBase('/publications/')}>All publications</a>
+        )}
+      </div>
+      <ol class="plain">
+        {shownPublications.map((publication) => (
+          <PublicationEntry publication={publication} />
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {recentNotes.length > 0 && (
+    <section class="section" aria-labelledby="notes-heading">
+      <div class="section-head">
+        <h2 id="notes-heading">Notes</h2>
+        {notes.length > recentNotes.length && <a href={withBase('/notes/')}>All notes</a>}
+      </div>
+      <NoteList notes={recentNotes} />
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .affiliation {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .lede {
+    font-size: 1.2rem;
+    line-height: 1.55;
+  }
+
+  .intro :global(.contact) {
+    margin-top: 1.25rem;
+  }
+
+  .plain {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>
