@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { site } from '../site.config';
 
 // Drafts show up in `astro dev` (with a draft label) and are never part of a production build.
 const include = ({ data }: { data: { draft: boolean } }) => import.meta.env.DEV || !data.draft;
@@ -10,7 +11,14 @@ export async function getProjects() {
 
 export async function getPublications() {
   const entries = await getCollection('publications', include);
-  return entries.sort((a, b) => b.data.year - a.data.year);
+  // Newest first; within a year, papers where my name comes earlier first.
+  const position = (authors: string[]) => {
+    const i = authors.findIndex((author) => site.authorAliases.includes(author));
+    return i === -1 ? authors.length : i;
+  };
+  return entries.sort(
+    (a, b) => b.data.year - a.data.year || position(a.data.authors) - position(b.data.authors),
+  );
 }
 
 export async function getNotes() {

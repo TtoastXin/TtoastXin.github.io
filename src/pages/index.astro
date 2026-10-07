@@ -1,26 +1,15 @@
 ---
 import ContactLinks from '../components/ContactLinks.astro';
 import NoteList from '../components/NoteList.astro';
-import ProjectEntry from '../components/ProjectEntry.astro';
 import PublicationEntry from '../components/PublicationEntry.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getNotes, getProjects, getPublications } from '../lib/content';
+import { news } from '../data/news';
+import { talks } from '../data/talks';
+import { getNotes, getPublications } from '../lib/content';
 import { withBase } from '../lib/url';
 import { site } from '../site.config';
 
-const [projects, publications, notes] = await Promise.all([
-  getProjects(),
-  getPublications(),
-  getNotes(),
-]);
-
-// Featured projects lead; without any, show the most recent ones.
-const featured = projects.filter((p) => p.data.featured);
-const work = (featured.length > 0 ? featured : projects).slice(0, 4);
-const selectedPublications = publications.filter((p) => p.data.selected);
-const shownPublications = (
-  selectedPublications.length > 0 ? selectedPublications : publications
-).slice(0, 5);
+const [publications, notes] = await Promise.all([getPublications(), getNotes()]);
 const recentNotes = notes.slice(0, 3);
 
 const jsonLd = {
@@ -35,54 +24,107 @@ const jsonLd = {
     url: site.affiliation.url,
   },
   knowsAbout: [
-    'Probabilistic inference',
-    'Simulation-based inference',
     'Generative models',
     'Inverse problems',
-    'Uncertainty quantification',
+    'Probabilistic inference',
+    'Simulation-based inference',
+    'MRI reconstruction',
+    'Medical image analysis',
   ],
   sameAs: [site.github, site.scholar].filter((url) => url !== undefined),
+  ...(site.photo && Astro.site && { image: new URL(withBase(site.photo), Astro.site).href }),
   ...(Astro.site && { url: new URL(withBase('/'), Astro.site).href }),
 };
 ---
 
 <BaseLayout type="profile" jsonLd={jsonLd}>
   <section class="intro" aria-labelledby="intro-name">
-    <h1 id="intro-name">{site.name}</h1>
-    <p class="affiliation">
-      {`${site.role}, ${site.affiliation.department}, `}
-      <a href={site.affiliation.url}>{site.affiliation.name}</a>
-    </p>
-    <p class="lede">{site.headline}</p>
-    <p>{site.interest}</p>
-    <ContactLinks />
+    {site.photo && (
+      <img
+        class="photo"
+        src={withBase(site.photo)}
+        alt={`Portrait of ${site.name}`}
+        width="640"
+        height="640"
+      />
+    )}
+    <div>
+      <h1 id="intro-name">{site.name}</h1>
+      <p class="affiliation">
+        {site.role}, {site.affiliation.department}
+        <br />
+        <a href={site.affiliation.url}>{site.affiliation.name}</a>, {site.affiliation.city}
+      </p>
+      {site.bio.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+      <ContactLinks />
+    </div>
   </section>
 
-  {work.length > 0 && (
-    <section class="section" aria-labelledby="work-heading">
+  {news.length > 0 && (
+    <section class="section" aria-labelledby="news-heading">
       <div class="section-head">
-        <h2 id="work-heading">Selected work</h2>
-        {projects.length > work.length && <a href={withBase('/work/')}>All work</a>}
+        <h2 id="news-heading">News</h2>
       </div>
-      {work.map((project) => (
-        <ProjectEntry project={project} />
-      ))}
+      <ul class="dated">
+        {news.map((item) => (
+          <li>
+            <span class="meta">{item.date}</span>
+            <span>
+              {item.text}
+              {item.link && (
+                <>
+                  {' '}
+                  <a href={item.link.url}>[{item.link.label}]</a>
+                </>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
     </section>
   )}
 
-  {shownPublications.length > 0 && (
+  {publications.length > 0 && (
     <section class="section" aria-labelledby="publications-heading">
       <div class="section-head">
         <h2 id="publications-heading">Publications</h2>
-        {publications.length > shownPublications.length && (
-          <a href={withBase('/publications/')}>All publications</a>
-        )}
+        {site.scholar && <a href={site.scholar}>Google Scholar</a>}
       </div>
       <ol class="plain">
-        {shownPublications.map((publication) => (
+        {publications.map((publication) => (
           <PublicationEntry publication={publication} />
         ))}
       </ol>
+    </section>
+  )}
+
+  {talks.length > 0 && (
+    <section class="section" aria-labelledby="talks-heading">
+      <div class="section-head">
+        <h2 id="talks-heading">Talks and posters</h2>
+      </div>
+      <ul class="dated">
+        {talks.map((talk) => (
+          <li>
+            <span class="meta">{talk.date}</span>
+            <span>
+              <span class="talk-title">{talk.title}</span>
+              <br />
+              <span class="muted">
+                {talk.kind} · {talk.event}, {talk.place}
+              </span>
+              {talk.link && (
+                <>
+                  {' '}
+                  <a href={talk.link.url}>[{talk.link.label}]</a>
+                </>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
     </section>
   )}
 
@@ -98,18 +140,30 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
+  .intro {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 2.25rem;
+    align-items: start;
+  }
+
+  .photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
   h1 {
     margin-bottom: 0.4rem;
   }
 
   .affiliation {
     color: var(--muted);
-    margin-bottom: 1.5rem;
-  }
-
-  .lede {
-    font-size: 1.2rem;
-    line-height: 1.55;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
   }
 
   .intro :global(.contact) {
@@ -120,5 +174,46 @@ const jsonLd = {
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  .dated {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dated li {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1rem;
+    padding-block: 0.6rem;
+  }
+
+  .dated li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .dated .meta {
+    padding-top: 0.2rem;
+  }
+
+  .talk-title {
+    font-weight: 600;
+  }
+
+  @media (max-width: 40rem) {
+    .intro {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .photo {
+      width: 8.5rem;
+    }
+
+    .dated li {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
   }
 </style>
