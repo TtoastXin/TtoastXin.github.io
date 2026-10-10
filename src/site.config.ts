@@ -24,11 +24,11 @@ interface SiteConfig {
 
 export const site: SiteConfig = {
   name: 'Xin Zhao',
-  tagline: 'Generative models for inverse problems and probabilistic inference',
+  tagline: 'Getting more out of pretrained models',
   description:
-    'Xin Zhao is a PhD candidate at the Max Planck Institute for Human Cognitive and Brain Sciences, working on generative models for inverse problems and probabilistic inference.',
+    'Xin Zhao is a PhD candidate at the Max Planck Institute for Human Cognitive and Brain Sciences, working on test-time adaptation of pretrained models.',
   bio: [
-    'I work on generative models for inverse problems and probabilistic inference: how learned priors can be combined with physical measurement models and scientific simulators to give accurate and reliable answers.',
+    'I am interested in getting more out of pretrained models after training: test-time adaptation, inference-time computation and reasoning, and continual adaptation. My current work develops these ideas for frozen diffusion models, with simulation-based inference and inverse problems as testbeds.',
     'My PhD project is on deep learning reconstruction for fast, ultra-high-resolution MRI. Before that, I worked on medical image analysis, including cardiac MRI segmentation and CT-based assessment of pulmonary hypertension.',
   ],
   role: 'PhD candidate',
