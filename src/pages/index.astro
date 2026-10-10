@@ -31,7 +31,7 @@ const jsonLd = {
     'MRI reconstruction',
     'Medical image analysis',
   ],
-  sameAs: [site.github, site.scholar].filter((url) => url !== undefined),
+  sameAs: [site.github, site.scholar, site.linkedin].filter((url) => url !== undefined),
   ...(site.photo && Astro.site && { image: new URL(withBase(site.photo), Astro.site).href }),
   ...(Astro.site && { url: new URL(withBase('/'), Astro.site).href }),
 };

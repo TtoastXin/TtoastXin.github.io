@@ -14,6 +14,7 @@ interface SiteConfig {
   email: string;
   github?: string;
   scholar?: string;
+  linkedin?: string;
   /** Path under public/. */
   photo?: string;
   /** Path under public/, e.g. '/cv.pdf'. The CV link appears once this is set. */
@@ -41,6 +42,7 @@ export const site: SiteConfig = {
   email: 'zhaox@cbs.mpg.de',
   github: 'https://github.com/TtoastXin',
   scholar: 'https://scholar.google.com/citations?user=58Qfq38AAAAJ',
+  linkedin: 'https://www.linkedin.com/in/xin-zhao-b3999a352',
   photo: '/photo.jpg',
   // cv: '/cv.pdf',
   authorAliases: ['Xin Zhao', 'X. Zhao'],
