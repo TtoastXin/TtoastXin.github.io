@@ -1,6 +1,11 @@
 // Identity, contact details and links used across the site.
 // Everything here is public. Keep unpublished research and private plans out of this repository.
 
+interface Person {
+  name: string;
+  url: string;
+}
+
 interface SiteConfig {
   name: string;
   /** Short identity used in the home page <title>. */
@@ -11,6 +16,11 @@ interface SiteConfig {
   bio: string[];
   role: string;
   affiliation: { name: string; department: string; url: string; city: string };
+  /** PhD supervision, rendered as one sentence on the home and About pages. */
+  supervision: {
+    supervisors: Person[];
+    externalAdvisor?: Person & { institution: string };
+  };
   email: string;
   github?: string;
   scholar?: string;
@@ -38,6 +48,17 @@ export const site: SiteConfig = {
     department: 'Department of Neurophysics',
     url: 'https://www.cbs.mpg.de',
     city: 'Leipzig, Germany',
+  },
+  supervision: {
+    supervisors: [
+      { name: 'Nikolaus Weiskopf', url: 'https://www.cbs.mpg.de/employees/weiskopf' },
+      { name: 'Nico Scherf', url: 'https://www.cbs.mpg.de/employees/nscherf' },
+    ],
+    externalAdvisor: {
+      name: 'Martin Weigert',
+      url: 'https://weigertlab.org',
+      institution: 'TU Dresden',
+    },
   },
   email: 'zhaox@cbs.mpg.de',
   github: 'https://github.com/TtoastXin',

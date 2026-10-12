@@ -2,6 +2,7 @@
 import ContactLinks from '../components/ContactLinks.astro';
 import NoteList from '../components/NoteList.astro';
 import PublicationEntry from '../components/PublicationEntry.astro';
+import Supervision from '../components/Supervision.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { news } from '../data/news';
 import { talks } from '../data/talks';
@@ -58,6 +59,9 @@ const jsonLd = {
       {site.bio.map((paragraph) => (
         <p>{paragraph}</p>
       ))}
+      <p>
+        <Supervision />
+      </p>
       <ContactLinks />
     </div>
   </section>

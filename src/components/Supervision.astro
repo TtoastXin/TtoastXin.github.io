@@ -1,0 +1,21 @@
+---
+import { site } from '../site.config';
+
+const { supervisors, externalAdvisor } = site.supervision;
+---
+
+My PhD is supervised by{' '}
+{supervisors.map((person, i) => (
+  <>
+    {i > 0 && (i === supervisors.length - 1 ? ' and ' : ', ')}
+    <a href={person.url}>{person.name}</a>
+  </>
+))}
+{externalAdvisor ? (
+  <>
+    , with <a href={externalAdvisor.url}>{externalAdvisor.name}</a> ({externalAdvisor.institution})
+    as external advisor.
+  </>
+) : (
+  '.'
+)}

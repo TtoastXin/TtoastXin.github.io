@@ -1,5 +1,6 @@
 ---
 import ContactLinks from '../components/ContactLinks.astro';
+import Supervision from '../components/Supervision.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../site.config';
 ---
@@ -14,7 +15,7 @@ import { site } from '../site.config';
       I am a {site.role} in physics in the {site.affiliation.department} at the{' '}
       <a href={site.affiliation.url}>{site.affiliation.name}</a> in Leipzig, and a member of the
       International Max Planck Research School on Cognitive NeuroImaging (IMPRS CoNI). I started my
-      PhD in 2024.
+      PhD in 2024. <Supervision />
     </p>
 
     <h2>Research</h2>
