@@ -41,6 +41,15 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     {jsonLd && (
       <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
     )}
+    {/* Cookieless page-view counting; production builds only, so local dev visits are not counted. */}
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        data-goatcounter="https://ttoastxin.goatcounter.com/count"
+        async
+        src="https://gc.zgo.at/count.js"
+      ></script>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">
