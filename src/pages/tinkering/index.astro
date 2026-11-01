@@ -7,14 +7,15 @@ const entries = await getSideProjects();
 ---
 
 <BaseLayout
-  title="Side projects"
+  title="Tinkering"
   description="Apps and small tools by Xin Zhao, built in spare time."
   noindex={entries.length === 0}
 >
   <header class="page-head">
-    <h1>Side projects</h1>
+    <h1>Tinkering</h1>
     <p class="muted">
-      Apps and small tools I build in my spare time, mostly to fix my own problems.
+      Small things I build between experiments. Mostly tools I wanted for myself, rearmed and
+      shipped.
     </p>
   </header>
   {entries.length > 0 ? (
