@@ -1,0 +1,74 @@
+---
+// ScreenLingo support page. App Store Connect uses this as the Support URL, so keep it stable.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../lib/url';
+
+const contact = 'xinzhao.dev@gmail.com';
+---
+
+<BaseLayout
+  title="ScreenLingo"
+  description="ScreenLingo translates German or Dutch apps on your phone with one double-tap on the back. Everything stays on the device."
+>
+  <article class="prose">
+    <header class="page-head">
+      <h1>ScreenLingo</h1>
+      <p class="muted">
+        Read German or Dutch apps in English or Chinese. Double-tap the back of your phone and
+        ScreenLingo shows the same screen, translated.
+      </p>
+    </header>
+
+    <p>
+      Text recognition and translation both run on the device, with Apple's Vision and Translation
+      frameworks. ScreenLingo has no account, no server and no analytics.{' '}
+      <a href={withBase('/screenlingo/privacy/')}>Privacy policy</a>.
+    </p>
+
+    <h2>Setup</h2>
+    <p>The app walks you through this on first launch. It takes about two minutes, once.</p>
+    <ol>
+      <li>Choose your languages and download Apple's language pack (needs network once).</li>
+      <li>
+        Add the ScreenLingo shortcut (<em>Take Screenshot</em>, then <em>Translate Screen</em>).
+      </li>
+      <li>
+        Open <strong>Settings → Accessibility → Touch → Back Tap → Double Tap</strong> and choose
+        <strong>ScreenLingo</strong>.
+      </li>
+      <li>Double-tap the back of your phone on the guide's example screen to check it works.</li>
+    </ol>
+    <p>
+      Without Back Tap you can still take a screenshot and open it with{' '}
+      <em>Translate a screenshot from Photos</em>.
+    </p>
+
+    <h2>Questions</h2>
+    <h3>Nothing happens when I double-tap.</h3>
+    <p>
+      Check that Back Tap → Double Tap is set to the ScreenLingo shortcut, and that the shortcut
+      contains <em>Take Screenshot</em> and then <em>Translate Screen</em>. Back Tap can miss taps
+      through thick cases.
+    </p>
+    <h3>It says the language isn't downloaded.</h3>
+    <p>
+      Open ScreenLingo and tap <em>Download</em> next to your language pair. iOS downloads the pack
+      from Apple once; after that, translating works offline.
+    </p>
+    <h3>The screenshot is blank.</h3>
+    <p>
+      Some apps (banking, video) block screenshots. iOS then delivers a blank image and there is
+      nothing to translate.
+    </p>
+    <h3>A translation is wrong.</h3>
+    <p>
+      Apple Translation translates each piece of text on its own, so short labels can lose context.
+      Tap the list button to see the original and the translation side by side.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions, bugs or ideas: <a href={`mailto:${contact}`}>{contact}</a>
+    </p>
+  </article>
+</BaseLayout>
