@@ -27,6 +27,22 @@ const projects = defineCollection({
   }),
 });
 
+// Things built in spare time (apps, small tools), outside the research record in `projects`.
+const sideProjects = defineCollection({
+  loader: glob({ pattern, base: './src/content/side-projects' }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    /** e.g. "iOS app" */
+    platform: z.string().optional(),
+    /** Internal path of the project's own page, e.g. "/screenlingo/". */
+    page: z.string().optional(),
+    links: z.array(link).default([]),
+    date: z.coerce.date(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const publications = defineCollection({
   loader: glob({ pattern, base: './src/content/publications' }),
   schema: z.object({
@@ -54,4 +70,4 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { projects, publications, notes };
+export const collections = { projects, sideProjects, publications, notes };

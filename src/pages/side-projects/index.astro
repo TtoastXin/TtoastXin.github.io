@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getSideProjects } from '../../lib/content';
+import { withBase } from '../../lib/url';
+
+const entries = await getSideProjects();
+---
+
+<BaseLayout
+  title="Side projects"
+  description="Apps and small tools by Xin Zhao, built in spare time."
+  noindex={entries.length === 0}
+>
+  <header class="page-head">
+    <h1>Side projects</h1>
+    <p class="muted">
+      Apps and small tools I build in my spare time, mostly to fix my own problems.
+    </p>
+  </header>
+  {entries.length > 0 ? (
+    entries.map(({ data }) => {
+      const href = data.page ? withBase(data.page) : undefined;
+      return (
+        <article class="entry">
+          <h2 class="title">{href ? <a href={href}>{data.title}</a> : data.title}</h2>
+          <p class="meta">
+            <time datetime={data.date.toISOString().slice(0, 10)}>
+              {data.date.getUTCFullYear()}
+            </time>
+            {data.platform && <span> · {data.platform}</span>}
+            {data.draft && <span class="draft">draft</span>}
+          </p>
+          <p>{data.summary}</p>
+          {data.links.length > 0 && (
+            <ul class="inline-list">
+              {data.links.map((link) => (
+                <li>
+                  <a href={link.url.startsWith('/') ? withBase(link.url) : link.url}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </article>
+      );
+    })
+  ) : (
+    <p>Nothing listed yet.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .entry {
+    padding-block: 1.5rem;
+  }
+
+  .entry + .entry {
+    border-top: 1px solid var(--rule);
+  }
+
+  .title {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .title a {
+    color: var(--fg);
+  }
+
+  .meta {
+    margin: 0.2rem 0 0.75rem;
+  }
+
+  .draft {
+    margin-left: 0.5rem;
+  }
+</style>

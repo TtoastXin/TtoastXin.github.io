@@ -9,6 +9,11 @@ export async function getProjects() {
   return entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
+export async function getSideProjects() {
+  const entries = await getCollection('sideProjects', include);
+  return entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+}
+
 export async function getPublications() {
   const entries = await getCollection('publications', include);
   // Newest first; within a year, papers where my name comes earlier first.
